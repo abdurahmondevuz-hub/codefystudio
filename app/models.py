@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Twohundered(models.Model):
     image = models.ImageField(upload_to='200k/')
     name = models.CharField(max_length=1000)
@@ -28,6 +27,7 @@ class MyProject(models.Model):
         Category,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='projects',
         verbose_name="Kategoriya"
     )
@@ -35,21 +35,22 @@ class MyProject(models.Model):
     short_description = models.CharField(max_length=300, verbose_name="Qisqa tavsif")
     full_description = models.TextField(blank=True, null=True, verbose_name="Batafsil tavsif")
 
-    # Media va Rasm
-    cover_image = models.ImageField(upload_to='projects/covers/', verbose_name="Asosiy rasm")
+    # Media va Rasm - Optional qilindi
+    cover_image = models.ImageField(upload_to='projects/covers/', blank=True, null=True, verbose_name="Asosiy rasm")
 
+    # Havolalar - Optional
     telegram_bot_url = models.URLField(blank=True, null=True, verbose_name="Telegram bot havolasi")
     website_url = models.URLField(blank=True, null=True, verbose_name="Sayt havolasi")
     github_url = models.URLField(blank=True, null=True, verbose_name="GitHub kodi havolasi")
 
-
     technologies = models.CharField(
         max_length=255,
+        blank=True, null=True,
         help_text="Vergul bilan ajratib yozing (masalan: Python, Django, Aiogram)",
         verbose_name="Ishlatilgan texnologiyalar"
     )
 
-    # Qo'shimcha parametrlar
+    # Qo'shimcha parametrlar - Optional
     price = models.CharField(max_length=100, blank=True, null=True, verbose_name="Narxi (masalan: 200 000 so'm)")
     delivery_time = models.CharField(max_length=100, blank=True, null=True,
                                      verbose_name="Bajarilish muddati (masalan: 2 kun)")
@@ -57,7 +58,7 @@ class MyProject(models.Model):
     # Status va Sozlamalar
     is_featured = models.BooleanField(default=False, verbose_name="Bosh sahifada ko'rsatilsinmi?")
     is_active = models.BooleanField(default=True, verbose_name="Faol holatdami?")
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Yaratilgan vaqti")
+    created_at = models.DateTimeField(auto_auto_add=True if hasattr(models.DateTimeField, 'auto_auto_add') else False, auto_now_add=True, verbose_name="Yaratilgan vaqti")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Yangilangan vaqti")
 
     class Meta:
@@ -87,6 +88,7 @@ class ProjectImage(models.Model):
     def __str__(self):
         return f"{self.project.title} - Rasm"
 
+
 class Izohlar(models.Model):
     Yulduzlar = [
         ("⭐", "1"),
@@ -98,6 +100,5 @@ class Izohlar(models.Model):
     stars = models.CharField(choices=Yulduzlar)
     izoh = models.CharField(max_length=1000)
     name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='izohchi/')
+    image = models.ImageField(upload_to='izohchi/', blank=True, null=True)
     kasb = models.CharField(max_length=30)
-

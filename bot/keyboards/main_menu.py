@@ -68,23 +68,33 @@ def inline_start_kb() -> InlineKeyboardMarkup:
 
 def website_btn_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
-        inline_keyboard=[[
-            InlineKeyboardButton(
-                text="🌐 codefy.uz — rasmiy sayt",
-                url=SITE_URL,
-                style="primary",
-            )
-        ]]
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="🌐 codefy.uz — rasmiy sayt",
+                    url=SITE_URL,
+                    style="primary",
+                )
+            ],
+            [
+                InlineKeyboardButton(text="◀️ Orqaga", callback_data="main_menu_back", style="danger")
+            ]
+        ]
     )
 
 
 def order_btn_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
-        inline_keyboard=[[
-            InlineKeyboardButton(
-                text="📝 Buyurtma berish (Telegram)",
-                url="https://t.me/abdurokhmandev",
-                style="success",
-            )
-        ]]
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text="📝 Buyurtma berish (Telegram)",
+                    url="https://t.me/abdurokhmandev",
+                    style="success",
+                )
+            ],
+            [
+                InlineKeyboardButton(text="◀️ Orqaga", callback_data="main_menu_back", style="danger")
+            ]
+        ]
     )

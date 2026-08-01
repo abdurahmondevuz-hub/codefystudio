@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 def categories_kb(categories: list[dict]) -> InlineKeyboardMarkup:
-    """Kategoriyalar — primary rang"""
+    """Kategoriyalar — primary rang va Orqaga tugmasi bilan"""
     buttons = []
     icons = ["☕", "🌐", "🤖", "📱", "🛠", "💎", "🔥", "🎯"]
     for i, cat in enumerate(categories):
@@ -16,6 +16,12 @@ def categories_kb(categories: list[dict]) -> InlineKeyboardMarkup:
         text="📋  Barcha loyihalar",
         callback_data="cat_all",
         style="primary",
+    )])
+    # Orqaga qaytish tugmasi
+    buttons.append([InlineKeyboardButton(
+        text="◀️  Orqaga",
+        callback_data="main_menu_back",
+        style="danger",
     )])
     return InlineKeyboardMarkup(inline_keyboard=buttons)
 
@@ -41,7 +47,7 @@ def project_detail_kb(project: dict) -> InlineKeyboardMarkup:
     """Loyiha havolalari"""
     buttons = []
 
-    # Havola tugmalari
+    # Havola tugmalari (agar kiritilgan bo'lsa)
     link_row = []
     if project.get("telegram_bot_url"):
         link_row.append(InlineKeyboardButton(

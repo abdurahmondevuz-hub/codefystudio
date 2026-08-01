@@ -2,9 +2,10 @@ import sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from aiogram import Router
-from aiogram.types import Message
+from aiogram import Router, F
+from aiogram.types import Message, CallbackQuery
 from aiogram.filters import CommandStart
+from aiogram.exceptions import TelegramBadRequest
 from keyboards.main_menu import main_menu_kb, inline_start_kb
 
 router = Router()
@@ -16,7 +17,7 @@ WELCOME_TEXT = """
 
 Salom, <b>{name}</b>! 👋
 
-Men — <b>Abdurahmon</b>, professional Full-Stack dasturchiman. 👨‍💻
+Men — <b>Abdurahmon</b>, professional Backend dasturchiman. 👨‍💻
 Sizning g'oyangizni zamonaviy vebsayt va yuqori tezlikda ishlovchi Telegram bot ko'rinishida sifatli yaratib beraman.
 
 <b>🛠 Qanday xizmatlar ko'rsataman?</b>
@@ -42,3 +43,25 @@ async def start_handler(message: Message):
         reply_markup=inline_start_kb(),
         parse_mode="HTML"
     )
+
+
+@router.callback_query(F.data == "main_menu_back")
+async def back_to_main_menu(callback: CallbackQuery):
+    """Orqaga tugmasi bosilganda bosh inline menyuga qaytish"""
+    try:
+        if callback.message.photo:
+            await callback.message.delete()
+            await callback.message.answer(
+                "⚡ <b>Tezkor navigatsiya menyusi:</b>",
+                reply_markup=inline_start_kb(),
+                parse_mode="HTML"
+            )
+        else:
+            await callback.message.edit_text(
+                "⚡ <b>Tezkor navigatsiya menyusi:</b>",
+                reply_markup=inline_start_kb(),
+                parse_mode="HTML"
+            )
+    except TelegramBadRequest:
+        pass
+    await callback.answer()

@@ -5,20 +5,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from aiogram import Router, F
 from aiogram.types import Message
 from db.queries import get_reviews
-from keyboards.main_menu import website_btn_kb
+from keyboards.main_menu import website_btn_kb, order_btn_kb
 
 router = Router()
 
 
-@router.message(F.text == "⭐ Izohlar")
+@router.message(F.text.in_({"⭐ Izohlar", "💬 Sharhlar", "Sharhlar"}))
 async def show_reviews(message: Message):
     reviews = await get_reviews()
     if not reviews:
-        await message.answer("😔 Hozircha izohlar mavjud emas.")
+        await message.answer("😔 Hozircha izohlar mavjud emas.", reply_markup=order_btn_kb())
         return
 
     header = (
-        "⭐ <b>MIJOZLAR IZOHLARI</b>\n"
+        "💬 <b>MIJOZLAR SHARHLARI & IZOHLARI</b>\n"
         "━━━━━━━━━━━━━━━━━━━\n"
     )
 
@@ -33,7 +33,7 @@ async def show_reviews(message: Message):
         cards.append(card)
 
     full_text = header + "\n\n━━━━━━━━━━━━━━━━━━━\n\n".join(cards)
-    await message.answer(full_text, parse_mode="HTML")
+    await message.answer(full_text, reply_markup=order_btn_kb(), parse_mode="HTML")
 
 
 @router.message(F.text == "🌐 Saytga o'tish")
@@ -42,7 +42,7 @@ async def go_to_website(message: Message):
         "🌐 <b>CODEFY APP</b>\n"
         "━━━━━━━━━━━━━━━━━━━\n\n"
         "Rasmiy saytimizda barcha loyihalar,\n"
-        "narxlar va biz haqida to'liq ma'lumot!\n\n"
+        "narxlar va to'liq ma'lumotlar!\n\n"
         "👇 Tugmani bosib o'ting:"
     )
     await message.answer(text, reply_markup=website_btn_kb(), parse_mode="HTML")
