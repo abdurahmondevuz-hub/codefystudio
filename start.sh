@@ -1,8 +1,13 @@
-#!/bin/bash
+﻿#!/bin/bash
 set -e
 
-echo "🤖 Bot ishga tushmoqda..."
-python bot/bot.py &
+echo '=== Staticfiles yig'ilmoqda ==='
+python manage.py collectstatic --noinput
 
-echo "🌐 Gunicorn ishga tushmoqda..."
+echo '=== Bot ishga tushmoqda ==='
+python bot/bot.py &
+BOT_PID=$!
+echo "Bot PID: $BOT_PID"
+
+echo '=== Gunicorn ishga tushmoqda ==='
 exec gunicorn scr.wsgi:application --bind 0.0.0.0:${PORT:-8000}
