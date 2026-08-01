@@ -1,18 +1,21 @@
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Railway Volume: /app/data mavjud bo'lsa, db va media o'sha yerda bo'ladi
+DATA_DIR = Path('/app/data') if Path('/app/data').exists() else BASE_DIR
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-5y%=%p9nfp!u24d!u6f%qfm)!takhj0-0rfci$2j75mv-j+=_v'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-5y%=%p9nfp!u24d!u6f%qfm)!takhj0-0rfci$2j75mv-j+=_')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
@@ -67,7 +70,8 @@ WSGI_APPLICATION = 'scr.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        # Railway Volume mavjud bo'lsa /app/data/db.sqlite3, aks holda loyiha papkasida
+        'NAME': DATA_DIR / 'db.sqlite3',
     }
 }
 
@@ -112,6 +116,6 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = DATA_DIR / 'media'
 
 
