@@ -4,6 +4,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
+from aiogram.exceptions import TelegramBadRequest
 
 from db.queries import get_twohundered
 from keyboards.main_menu import order_btn_kb
@@ -97,6 +98,18 @@ Bitta xabarda vazifani yozing — shaxsan javob beraman, format va narxni birga 
 """
 
 
+async def safe_edit_text(callback: CallbackQuery, text: str, reply_markup=None):
+    """Mavjud xabarni tahrirlash (yangi xabar yubormasdan)"""
+    try:
+        if callback.message.photo:
+            await callback.message.delete()
+            await callback.message.answer(text, reply_markup=reply_markup, parse_mode="HTML")
+        else:
+            await callback.message.edit_text(text, reply_markup=reply_markup, parse_mode="HTML")
+    except TelegramBadRequest:
+        pass
+
+
 @router.message(F.text.in_({"💡 Qanday ishlaydi", "Qanday ishlaydi", "📋 Qanday ishlaydi"}))
 async def show_how(message: Message):
     await message.answer(HOW_TEXT, reply_markup=order_btn_kb(), parse_mode="HTML")
@@ -104,7 +117,7 @@ async def show_how(message: Message):
 
 @router.callback_query(F.data == "info_how")
 async def cb_show_how(callback: CallbackQuery):
-    await callback.message.answer(HOW_TEXT, reply_markup=order_btn_kb(), parse_mode="HTML")
+    await safe_edit_text(callback, HOW_TEXT, reply_markup=order_btn_kb())
     await callback.answer()
 
 
@@ -115,7 +128,7 @@ async def show_advantages(message: Message):
 
 @router.callback_query(F.data == "info_advantages")
 async def cb_show_advantages(callback: CallbackQuery):
-    await callback.message.answer(ADVANTAGES_TEXT, reply_markup=order_btn_kb(), parse_mode="HTML")
+    await safe_edit_text(callback, ADVANTAGES_TEXT, reply_markup=order_btn_kb())
     await callback.answer()
 
 
@@ -126,7 +139,7 @@ async def show_pricing(message: Message):
 
 @router.callback_query(F.data == "info_pricing")
 async def cb_show_pricing(callback: CallbackQuery):
-    await callback.message.answer(PRICING_TEXT, reply_markup=order_btn_kb(), parse_mode="HTML")
+    await safe_edit_text(callback, PRICING_TEXT, reply_markup=order_btn_kb())
     await callback.answer()
 
 
@@ -137,7 +150,7 @@ async def show_faq(message: Message):
 
 @router.callback_query(F.data == "info_faq")
 async def cb_show_faq(callback: CallbackQuery):
-    await callback.message.answer(FAQ_TEXT, reply_markup=order_btn_kb(), parse_mode="HTML")
+    await safe_edit_text(callback, FAQ_TEXT, reply_markup=order_btn_kb())
     await callback.answer()
 
 
@@ -148,7 +161,7 @@ async def show_contact(message: Message):
 
 @router.callback_query(F.data == "info_contact")
 async def cb_show_contact(callback: CallbackQuery):
-    await callback.message.answer(CONTACT_TEXT, reply_markup=order_btn_kb(), parse_mode="HTML")
+    await safe_edit_text(callback, CONTACT_TEXT, reply_markup=order_btn_kb())
     await callback.answer()
 
 
@@ -165,19 +178,28 @@ async def show_order(message: Message):
 
 @router.message(F.text.in_({"⚡ 200k Botlar", "Bot loyihalarim", "🚀 Bot loyihalarim", "200minglik botlar"}))
 async def show_twohundred(message: Message):
-    await send_twohundred_info(message)
+    await send_twohundred_info(message, is_callback=False)
 
 
 @router.callback_query(F.data == "info_twohundred")
 async def cb_show_twohundred(callback: CallbackQuery):
-    await send_twohundred_info(callback.message)
+    await send_twohundred_info(callback, is_callback=True)
     await callback.answer()
 
 
-async def send_twohundred_info(target):
+async def send_twohundred_info(target, is_callback=False):
     bots = await get_twohundered()
 
     if bots:
+        if is_callback:
+            try:
+                await target.message.delete()
+            except Exception:
+                pass
+            msg_target = target.message
+        else:
+            msg_target = target
+
         for b in bots:
             text = (
                 f"⚡ <b>{b['name'].upper()}</b>\n"
@@ -189,7 +211,7 @@ async def send_twohundred_info(target):
             if img:
                 photo_url = f"{MEDIA_BASE_URL}/{img}"
                 try:
-                    await target.answer_photo(
+                    await msg_target.answer_photo(
                         photo=photo_url,
                         caption=text,
                         reply_markup=order_btn_kb(),
@@ -198,7 +220,7 @@ async def send_twohundred_info(target):
                     continue
                 except Exception:
                     pass
-            await target.answer(text, reply_markup=order_btn_kb(), parse_mode="HTML")
+            await msg_target.answer(text, reply_markup=order_btn_kb(), parse_mode="HTML")
     else:
         text = (
             "⚡ <b>200 000 SO'MLIK TARIF BOTLARI</b>\n"
@@ -209,4 +231,7 @@ async def send_twohundred_info(target):
             "🎵 <b>Musiqa topuvchi bot:</b> Ovoz, matn yoki nom bo'yicha qo'shiqlarni izlab topib beradi.\n"
             "📋 <b>Anketa & Qabul boti:</b> Foydalanuvchilar murojaat va anketalarini yig'ib beradi.\n"
         )
-        await target.answer(text, reply_markup=order_btn_kb(), parse_mode="HTML")
+        if is_callback:
+            await safe_edit_text(target, text, reply_markup=order_btn_kb())
+        else:
+            await target.answer(text, reply_markup=order_btn_kb(), parse_mode="HTML")

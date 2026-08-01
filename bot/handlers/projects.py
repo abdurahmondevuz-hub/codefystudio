@@ -3,7 +3,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from aiogram import Router, F
-from aiogram.types import CallbackQuery
+from aiogram.types import CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.exceptions import TelegramBadRequest
 from db.queries import get_projects_by_category, get_all_projects, get_project_detail
 from keyboards.project_kb import projects_list_kb, project_detail_kb
@@ -12,14 +12,31 @@ from config import MEDIA_BASE_URL
 router = Router()
 
 
+def empty_projects_kb() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [InlineKeyboardButton(text="📝 Birinchi bo'lib buyurtma berish", url="https://t.me/abdurokhmandev", style="success")],
+            [InlineKeyboardButton(text="◀️ Kategoriyalarga qaytish", callback_data="back_cats", style="danger")]
+        ]
+    )
+
+
 @router.callback_query(F.data == "cat_all")
 async def show_all_projects(callback: CallbackQuery):
     projects = await get_all_projects()
     if not projects:
-        await callback.message.edit_text("😔 Hozircha loyihalar yo'q.")
+        text = (
+            "🚀 <b>BOT LOYIHALARIM</b>\n"
+            "━━━━━━━━━━━━━━━━━━━\n\n"
+            "Hozircha baza yangi bo'lgani uchun loyihalar qo'shilmoqda.\n"
+            "Siz birinchi bo me'yoriy loyihangizni buyurtma qilishingiz mumkin! 🤝"
+        )
+        await callback.message.edit_text(text, reply_markup=empty_projects_kb(), parse_mode="HTML")
+        await callback.answer()
         return
+
     text = (
-        f"🗂 <b>BARCHA LOYIHALAR</b>\n"
+        f"🚀 <b>BARCHA LOYIHALARIM</b>\n"
         f"━━━━━━━━━━━━━━━━━━━\n\n"
         f"Jami: <b>{len(projects)} ta</b> loyiha\n\n"
         f"Batafsil ko'rish uchun tanlang 👇"
@@ -33,15 +50,18 @@ async def show_projects_by_category(callback: CallbackQuery):
     cat_id = int(callback.data.split("_")[1])
     projects = await get_projects_by_category(cat_id)
     if not projects:
-        await callback.message.edit_text(
-            "😔 Bu kategoriyada hozircha loyihalar yo'q.\n\n"
-            "Tez orada yangi loyihalar qo'shiladi! 🔜",
-            reply_markup=None
+        text = (
+            "🚀 <b>LOYIHALAR</b>\n"
+            "━━━━━━━━━━━━━━━━━━━\n\n"
+            "Bu kategoriyada hozircha loyihalar qo'shilmadi.\n"
+            "Tez orada yangi loyihalar joylanadi! 🔜"
         )
+        await callback.message.edit_text(text, reply_markup=empty_projects_kb(), parse_mode="HTML")
         await callback.answer()
         return
+
     text = (
-        f"🗂 <b>LOYIHALAR</b>\n"
+        f"🚀 <b>LOYIHALAR</b>\n"
         f"━━━━━━━━━━━━━━━━━━━\n\n"
         f"Jami: <b>{len(projects)} ta</b> loyiha\n\n"
         f"Batafsil ko'rish uchun tanlang 👇"
@@ -59,7 +79,6 @@ async def show_project_detail(callback: CallbackQuery):
         await callback.answer("Loyiha topilmadi!", show_alert=True)
         return
 
-    # Chiroyli karta
     lines = [
         f"⚡ <b>{project['title'].upper()}</b>",
         "━━━━━━━━━━━━━━━━━━━",
@@ -77,16 +96,15 @@ async def show_project_detail(callback: CallbackQuery):
     lines.append("━━━━━━━━━━━━━━━━━━━")
 
     if project.get("technologies"):
-        lines.append(f"🛠 <b>Stack:</b>  {project['technologies']}")
+        lines.append(f"🛠 <b>Stack:</b> {project['technologies']}")
 
     if project.get("price"):
-        lines.append(f"💰 <b>Narxi:</b>  {project['price']}")
+        lines.append(f"💰 <b>Narxi:</b> {project['price']}")
 
     if project.get("delivery_time"):
-        lines.append(f"⏱ <b>Muddat:</b>  {project['delivery_time']}")
+        lines.append(f"⏱ <b>Muddat:</b> {project['delivery_time']}")
 
     lines.append("━━━━━━━━━━━━━━━━━━━")
-    lines.append("🔗 Havolalar ↓")
 
     text = "\n".join(lines)
     kb = project_detail_kb(project)

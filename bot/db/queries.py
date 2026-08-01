@@ -23,8 +23,8 @@ async def get_projects_by_category(category_id: int) -> list[dict]:
         async with db.execute(
             """SELECT id, title, short_description, cover_image, price, delivery_time
                FROM app_myproject
-               WHERE category_id = ? AND is_active = 1
-               ORDER BY created_at DESC""",
+               WHERE category_id = ?
+               ORDER BY id DESC""",
             (category_id,)
         ) as cursor:
             rows = await cursor.fetchall()
@@ -36,8 +36,8 @@ async def get_all_projects() -> list[dict]:
         db.row_factory = aiosqlite.Row
         async with db.execute(
             """SELECT id, title, short_description, cover_image, price, delivery_time
-               FROM app_myproject WHERE is_active = 1
-               ORDER BY created_at DESC"""
+               FROM app_myproject
+               ORDER BY id DESC"""
         ) as cursor:
             rows = await cursor.fetchall()
             return [dict(row) for row in rows]
@@ -53,7 +53,7 @@ async def get_project_detail(project_id: int) -> dict | None:
                       c.name as category_name
                FROM app_myproject p
                LEFT JOIN app_category c ON p.category_id = c.id
-               WHERE p.id = ? AND p.is_active = 1""",
+               WHERE p.id = ?""",
             (project_id,)
         ) as cursor:
             row = await cursor.fetchone()
@@ -64,7 +64,7 @@ async def get_reviews() -> list[dict]:
     async with aiosqlite.connect(DB_PATH) as db:
         db.row_factory = aiosqlite.Row
         async with db.execute(
-            "SELECT name, kasb, stars, izoh FROM app_izohlar LIMIT 5"
+            "SELECT name, kasb, stars, izoh FROM app_izohlar LIMIT 10"
         ) as cursor:
             rows = await cursor.fetchall()
             return [dict(row) for row in rows]
