@@ -9,15 +9,30 @@ from keyboards.main_menu import main_menu_kb
 
 router = Router()
 
+WELCOME_TEXT = """
+╔══════════════════════════╗
+   ⚡ <b>CODEFY APP</b> ga xush kelibsiz!
+╚══════════════════════════╝
+
+Salom, <b>{name}</b>! 👋
+
+Biz — <b>professional dasturchilar jamoasi</b>.
+Sizning g'oyangizni haqiqiy mahsulotga aylantiramiz.
+
+<b>🛠 Nima qilamiz?</b>
+├ 🤖 Telegram botlar
+├ 🌐 Web saytlar
+├ 📱 Mobile ilovalar
+└ 🔧 Avtomatlashtirish
+
+👇 <b>Menyudan tanlang:</b>
+"""
+
 
 @router.message(CommandStart())
 async def start_handler(message: Message):
-    name = message.from_user.full_name
-    text = (
-        f"👋 Salom, <b>{name}</b>!\n\n"
-        f"🚀 <b>CodefyStudio</b> botiga xush kelibsiz!\n\n"
-        f"Bu yerda siz bizning barcha loyihalarimiz bilan tanishishingiz, "
-        f"mijozlar izohlarini o'qishingiz va rasmiy saytimizga o'tishingiz mumkin.\n\n"
-        f"👇 Quyidagi menyudan tanlang:"
+    await message.answer(
+        WELCOME_TEXT.format(name=message.from_user.full_name),
+        reply_markup=main_menu_kb(),
+        parse_mode="HTML"
     )
-    await message.answer(text, reply_markup=main_menu_kb(), parse_mode="HTML")

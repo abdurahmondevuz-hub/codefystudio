@@ -17,20 +17,32 @@ async def show_reviews(message: Message):
         await message.answer("😔 Hozircha izohlar mavjud emas.")
         return
 
-    parts = ["⭐ <b>Mijozlar izohlari</b>\n"]
+    header = (
+        "⭐ <b>MIJOZLAR IZOHLARI</b>\n"
+        "━━━━━━━━━━━━━━━━━━━\n"
+    )
+
+    cards = []
     for r in reviews:
-        parts.append(
-            f"{r.get('stars', '')}\n"
-            f"👤 <b>{r.get('name', '')}</b> — <i>{r.get('kasb', '')}</i>\n"
-            f"💬 {r.get('izoh', '')}"
+        card = (
+            f"{r.get('stars', '⭐')}\n"
+            f"👤 <b>{r.get('name', '')}</b>\n"
+            f"💼 <i>{r.get('kasb', '')}</i>\n\n"
+            f"❝ {r.get('izoh', '')} ❞"
         )
-    await message.answer("\n\n➖➖➖➖➖\n\n".join(parts), parse_mode="HTML")
+        cards.append(card)
+
+    full_text = header + "\n\n━━━━━━━━━━━━━━━━━━━\n\n".join(cards)
+    await message.answer(full_text, parse_mode="HTML")
 
 
 @router.message(F.text == "🌐 Saytga o'tish")
 async def go_to_website(message: Message):
-    await message.answer(
-        "🌐 <b>codefy.uz</b> — rasmiy saytimiz.\n\nBarcha loyihalar, narxlar va biz haqimda to'liq ma'lumot!",
-        reply_markup=website_btn_kb(),
-        parse_mode="HTML"
+    text = (
+        "🌐 <b>CODEFY APP</b>\n"
+        "━━━━━━━━━━━━━━━━━━━\n\n"
+        "Rasmiy saytimizda barcha loyihalar,\n"
+        "narxlar va biz haqida to'liq ma'lumot!\n\n"
+        "👇 Tugmani bosib o'ting:"
     )
+    await message.answer(text, reply_markup=website_btn_kb(), parse_mode="HTML")

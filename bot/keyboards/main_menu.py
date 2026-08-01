@@ -12,11 +12,13 @@ def main_menu_kb() -> ReplyKeyboardMarkup:
             [KeyboardButton(text="🌐 Saytga o'tish")],
         ],
         resize_keyboard=True,
-        input_field_placeholder="Menyu tanlang...",
+        input_field_placeholder="Menyudan tanlang...",
     )
 
 
 def website_btn_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
-        inline_keyboard=[[InlineKeyboardButton(text="🌐 codefy.uz ga o'tish", url=SITE_URL)]]
+        inline_keyboard=[[
+            InlineKeyboardButton(text="🌐 codefy.uz — rasmiy sayt", url=SITE_URL)
+        ]]
     )

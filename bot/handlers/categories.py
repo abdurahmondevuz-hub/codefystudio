@@ -16,11 +16,14 @@ async def show_categories(message: Message):
     if not categories:
         await message.answer("😔 Hozircha kategoriyalar mavjud emas.")
         return
-    await message.answer(
-        "📂 <b>Kategoriyalardan birini tanlang:</b>",
-        reply_markup=categories_kb(categories),
-        parse_mode="HTML"
+
+    text = (
+        "📂 <b>LOYIHALAR</b>\n"
+        "━━━━━━━━━━━━━━━━━━━\n\n"
+        "Quyida bizning ishlarimiz kategoriyalari.\n"
+        "Ko'rmoqchi bo'lgan turni tanlang 👇"
     )
+    await message.answer(text, reply_markup=categories_kb(categories), parse_mode="HTML")
 
 
 @router.callback_query(F.data == "back_cats")
@@ -29,9 +32,11 @@ async def back_to_categories(callback: CallbackQuery):
     if not categories:
         await callback.message.edit_text("😔 Hozircha kategoriyalar mavjud emas.")
         return
-    await callback.message.edit_text(
-        "📂 <b>Kategoriyalardan birini tanlang:</b>",
-        reply_markup=categories_kb(categories),
-        parse_mode="HTML"
+
+    text = (
+        "📂 <b>LOYIHALAR</b>\n"
+        "━━━━━━━━━━━━━━━━━━━\n\n"
+        "Kategoriyani tanlang 👇"
     )
+    await callback.message.edit_text(text, reply_markup=categories_kb(categories), parse_mode="HTML")
     await callback.answer()
