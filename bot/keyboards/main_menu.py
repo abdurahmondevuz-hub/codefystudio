@@ -13,23 +13,23 @@ def main_menu_kb() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(
         keyboard=[
             [
-                KeyboardButton(text="📂 Loyihalarim"),
+                KeyboardButton(text="🚀 Bot loyihalarim"),
                 KeyboardButton(text="⚡ 200k Botlar"),
             ],
             [
-                KeyboardButton(text="💡 Qanday ishlaydi"),
+                KeyboardButton(text="📋 Qanday ishlaydi"),
                 KeyboardButton(text="⭐ Afzalliklar"),
             ],
             [
-                KeyboardButton(text="💵 Narxlar"),
+                KeyboardButton(text="💰 Narxlar"),
                 KeyboardButton(text="❓ FAQ"),
             ],
             [
-                KeyboardButton(text="📞 Bog'lanish"),
+                KeyboardButton(text="📩 Bog'lanish"),
                 KeyboardButton(text="📝 Buyurtma berish"),
             ],
             [
-                KeyboardButton(text="⭐ Izohlar"),
+                KeyboardButton(text="💬 Sharhlar"),
                 KeyboardButton(text="🌐 Saytga o'tish"),
             ],
         ],
@@ -44,20 +44,20 @@ def inline_start_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
-                InlineKeyboardButton(text="📂 Loyihalarim", callback_data="cat_all", style="primary"),
+                InlineKeyboardButton(text="🚀 Bot loyihalarim", callback_data="cat_all", style="primary"),
                 InlineKeyboardButton(text="⚡ 200k Botlar", callback_data="info_twohundred", style="success"),
             ],
             [
-                InlineKeyboardButton(text="💡 Qanday ishlaydi", callback_data="info_how"),
+                InlineKeyboardButton(text="📋 Qanday ishlaydi", callback_data="info_how"),
                 InlineKeyboardButton(text="⭐ Afzalliklar", callback_data="info_advantages"),
             ],
             [
-                InlineKeyboardButton(text="💵 Narxlar", callback_data="info_pricing"),
+                InlineKeyboardButton(text="💰 Narxlar", callback_data="info_pricing"),
                 InlineKeyboardButton(text="❓ FAQ", callback_data="info_faq"),
             ],
             [
-                InlineKeyboardButton(text="📝 Buyurtma berish", url="https://t.me/abdurahmondevuz", style="success"),
-                InlineKeyboardButton(text="📞 Bog'lanish", callback_data="info_contact", style="primary"),
+                InlineKeyboardButton(text="📝 Buyurtma berish", url="https://t.me/abdurokhmandev", style="success"),
+                InlineKeyboardButton(text="📩 Bog'lanish", callback_data="info_contact", style="primary"),
             ],
             [
                 InlineKeyboardButton(text="🌐 codefy.uz", url=SITE_URL, style="primary"),
@@ -70,7 +70,7 @@ def website_btn_kb() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(
         inline_keyboard=[[
             InlineKeyboardButton(
-                text="🌐  codefy.uz — rasmiy sayt",
+                text="🌐 codefy.uz — rasmiy sayt",
                 url=SITE_URL,
                 style="primary",
             )
@@ -83,7 +83,7 @@ def order_btn_kb() -> InlineKeyboardMarkup:
         inline_keyboard=[[
             InlineKeyboardButton(
                 text="📝 Buyurtma berish (Telegram)",
-                url="https://t.me/abdurahmondevuz",
+                url="https://t.me/abdurokhmandev",
                 style="success",
             )
         ]]

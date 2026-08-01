@@ -67,7 +67,7 @@ def project_detail_kb(project: dict) -> InlineKeyboardMarkup:
     # Buyurtma tugmasi — success (yashil)
     buttons.append([InlineKeyboardButton(
         text="📩  Buyurtma berish",
-        url="https://t.me/abdurahmondevuz",
+        url="https://t.me/abdurokhmandev",
         style="success",
     )])
 
