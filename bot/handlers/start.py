@@ -5,7 +5,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import CommandStart
-from keyboards.main_menu import main_menu_kb
+from keyboards.main_menu import main_menu_kb, inline_start_kb
 
 router = Router()
 
@@ -16,16 +16,16 @@ WELCOME_TEXT = """
 
 Salom, <b>{name}</b>! 👋
 
-Biz — <b>professional dasturchilar jamoasi</b>.
-Sizning g'oyangizni haqiqiy mahsulotga aylantiramiz.
+Men — <b>Abdurahmon</b>, professional Full-Stack dasturchiman. 👨‍💻
+Sizning g'oyangizni zamonaviy vebsayt va yuqori tezlikda ishlovchi Telegram bot ko'rinishida sifatli yaratib beraman.
 
-<b>🛠 Nima qilamiz?</b>
-├ 🤖 Telegram botlar
-├ 🌐 Web saytlar
-├ 📱 Mobile ilovalar
-└ 🔧 Avtomatlashtirish
+<b>🛠 Qanday xizmatlar ko'rsataman?</b>
+├ 🤖 Har qanday murakkablikdagi Telegram botlar
+├ 🌐 Zamonaviy, responsive vebsaytlar va WebApplar
+├ ⚡ 200 000 so'mdan boshlanadigan tayyor sifatli botlar
+└ 🔧 CRM va avtomatlashtirish tizimlari
 
-👇 <b>Menyudan tanlang:</b>
+👇 <b>Menyudan kerakli bo'limni tanlang:</b>
 """
 
 
@@ -34,5 +34,11 @@ async def start_handler(message: Message):
     await message.answer(
         WELCOME_TEXT.format(name=message.from_user.full_name),
         reply_markup=main_menu_kb(),
+        parse_mode="HTML"
+    )
+    # Inline menu ham birga ko'rsatiladi
+    await message.answer(
+        "⚡ <b>Tezkor navigatsiya menyusi:</b>",
+        reply_markup=inline_start_kb(),
         parse_mode="HTML"
     )

@@ -68,3 +68,13 @@ async def get_reviews() -> list[dict]:
         ) as cursor:
             rows = await cursor.fetchall()
             return [dict(row) for row in rows]
+
+
+async def get_twohundered() -> list[dict]:
+    async with aiosqlite.connect(DB_PATH) as db:
+        db.row_factory = aiosqlite.Row
+        async with db.execute(
+            "SELECT id, image, name, desc FROM app_twohundered"
+        ) as cursor:
+            rows = await cursor.fetchall()
+            return [dict(row) for row in rows]

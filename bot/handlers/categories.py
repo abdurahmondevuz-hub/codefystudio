@@ -10,7 +10,7 @@ from keyboards.project_kb import categories_kb
 router = Router()
 
 
-@router.message(F.text == "📂 Loyihalar")
+@router.message(F.text.in_({"📂 Loyihalar", "📂 Loyihalarim", "Loyihalarim", "Bot loyihalarim"}))
 async def show_categories(message: Message):
     categories = await get_categories()
     if not categories:
@@ -18,9 +18,9 @@ async def show_categories(message: Message):
         return
 
     text = (
-        "📂 <b>LOYIHALAR</b>\n"
+        "📂 <b>LOYIHALARIM</b>\n"
         "━━━━━━━━━━━━━━━━━━━\n\n"
-        "Quyida bizning ishlarimiz kategoriyalari.\n"
+        "Quyida mening tayyorlagan loyihalarim kategoriyalari.\n"
         "Ko'rmoqchi bo'lgan turni tanlang 👇"
     )
     await message.answer(text, reply_markup=categories_kb(categories), parse_mode="HTML")
@@ -34,7 +34,7 @@ async def back_to_categories(callback: CallbackQuery):
         return
 
     text = (
-        "📂 <b>LOYIHALAR</b>\n"
+        "📂 <b>LOYIHALARIM</b>\n"
         "━━━━━━━━━━━━━━━━━━━\n\n"
         "Kategoriyani tanlang 👇"
     )
