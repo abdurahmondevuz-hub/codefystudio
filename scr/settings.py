@@ -19,6 +19,13 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://codefy.uz',
+    'https://www.codefy.uz',
+    'https://*.up.railway.app',
+    'https://*.railway.app',
+]
+
 
 # Application definition
 
