@@ -58,7 +58,7 @@ class MyProject(models.Model):
     # Status va Sozlamalar
     is_featured = models.BooleanField(default=False, verbose_name="Bosh sahifada ko'rsatilsinmi?")
     is_active = models.BooleanField(default=True, verbose_name="Faol holatdami?")
-    created_at = models.DateTimeField(auto_auto_add=True if hasattr(models.DateTimeField, 'auto_auto_add') else False, auto_now_add=True, verbose_name="Yaratilgan vaqti")
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Yaratilgan vaqti")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Yangilangan vaqti")
 
     class Meta:
